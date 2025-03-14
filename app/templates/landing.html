@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Analysis Framework</title>
+    <script src="/static/js/slider.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@400;600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Inter', sans-serif; /* Use a modern and clean font like Inter */
+    line-height: 1.6;
+    font-size: 16px;
+    color: #333333;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+}
+
+/* Light Mode */
+body.light-mode {
+    background-color: #f9f9f9;
+    color: #333333;
+}
+
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .navbar {
+    background-color: #000000;
+}
+
+body.light-mode .navbar {
+    background-color: #dddddd; /* Light grey for light mode */
+    color: #333; /* Dark text for light mode */
+    border-bottom: 1px solid #ddd; /* Subtle border for professionalism */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links li:not(:last-child) {
+    margin-right: 60px; /* Add space to the right of each link except the last */
+}
+
+
+body.dark-mode .nav-links li a {
+    color: #FFFFFF;
+}
+
+body.light-mode .nav-links li a {
+    color: #333333;
+}
+
+.nav-links a:hover {
+  color: #f39c12;
+}
+.nav-links li a:hover {
+    color: #fc4f35;
+}
+/* Dropdown menu styling */
+.dropdown-menu {
+  list-style: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #333;
+  display: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.dropdown-menu a:hover {
+  background-color: #444;
+  color: #f39c12;
+}
+/* Show dropdown menu on hover */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.cta {
+    background-color: #fc4f35;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.cta:hover {
+    background-color: #1670eb;
+}
+
+/* Hero Section */
+
+
+body.dark-mode .hero {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+    border-bottom-color: #272a77;
+}
+
+body.light-mode .hero {
+    background-color: #ffffff;
+    color: #333333;
+    border-bottom-color: #dddddd;
+}
+/* Light Mode Hero Section */
+body.light-mode .hero-content {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-bottom: 5px solid #dddddd; /* Subtle border */
+}
+
+/* Dark Mode Hero Section */
+body.dark-mode .hero-content {
+    background-color: #1a1a1a; /* Dark background */
+    color: #f1f1f1; /* Light text */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); /* Softer shadow */
+    border-bottom: 5px solid #333333;
+}
+
+/* Hero Section */
+
+.hero {
+    margin-bottom: -5px;
+}
+
+.hero-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 80px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.hero-text {
+    flex: 1;
+    text-align: left;
+    margin-right: 10px; /* Adds space between text and image */
+}
+
+.hero-text h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+/* Light Mode Heading */
+body.light-mode .hero-text h1 {
+    color: #222222;
+}
+
+/* Dark Mode Heading */
+body.dark-mode .hero-text h1 {
+    color: #f9f9f9;
+}
+
+/* Paragraph Styling */
+.hero-text p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    transition: color 0.3s;
+}
+
+/* Light Mode Paragraph */
+body.light-mode .hero-text p {
+    color: #555555;
+}
+
+/* Dark Mode Paragraph */
+body.dark-mode .hero-text p {
+    color: #aaaaaa;
+}
+
+.hero-image {
+    flex: 0 0 auto;
+    max-width: 250px; /* Adjust as needed */
+}
+
+.hero-image img {
+    width: 190%;
+    height: auto;
+}
+
+/* Call-to-Action Buttons */
+.cta-button {
+    margin-top: 40px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light Mode CTA Button */
+body.light-mode .cta-button {
+    background-color: #1670eb; /* Blue button */
+    color: #ffffff; /* White text */
+}
+
+/* Dark Mode CTA Button */
+body.dark-mode .cta-button {
+    background-color: #fc4f35; /* Red button */
+    color: #ffffff; /* White text */
+}
+
+body.dark-mode .cta-button {
+    background-color: #1670eb;
+}
+
+body.light-mode .cta-button {
+    background-color: #333333;
+}
+
+/* Hover Effects for CTA Button */
+.cta-button:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+
+/* Features Section */
+.features {
+    padding: 50px;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .features {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+    border-top: 1px solid #272a77;
+}
+
+body.light-mode .features {
+    background-color: #f9f9f9;
+    color: #333333;
+    border-top: 1px solid #cccccc;
+}
+
+.feature-item {
+    margin: 20px 0;
+    padding: 20px;
+    border-left: 3px solid #272a77;
+    border-radius: 5px;
+    transition: transform 0.3s, border-color 0.3s, background-color 0.3s;
+}
+
+body.dark-mode .feature-item {
+    background-color: #2a2a2a;
+    color: #FFFFFF;
+}
+
+body.light-mode .feature-item {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.feature-item:hover {
+    transform: scale(1.02);
+    border-left-color: #fc4f35;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+body.dark-mode footer {
+    background-color: #000000;
+    color: #b3b3b3;
+    border-top: 1px solid #272a77;
+}
+
+body.light-mode footer {
+    background-color: #ffffff;
+    color: #666666;
+    border-top: 1px solid #dddddd;
+}
+
+/* Theme Toggle Button */
+#theme-toggle {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+body.light-mode #theme-toggle {
+    color: #333333;
+}
+
+body.dark-mode #theme-toggle {
+    color: #FFFFFF;
+}
+/* Navbar styles */
+.navbar {
+    height: 100px; /* Adjust height */
+    padding: 0 15px; /* Adjust horizontal padding */
+    background-color: #000; /* Ensure your background is consistent */
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: space-between; /* Space items */
+}
+
+.navbar-brand {
+    font-size: 40px; /* Adjust font size for branding */
+    margin: 0; /* Remove extra margin */
+}
+
+/* Adjust Logo */
+.navbar .logo img {
+    height: 150px; /* Ensure the logo size remains the same */
+    max-height: 100%; /* Maintain aspect ratio */
+    margin-right: 15px; /* Add spacing between the logo and text */
+}
+.navbar-nav {
+    display: flex;
+    gap: 15px; /* Space between links */
+}
+
+.navbar-nav .nav-item {
+    padding: 10; /* Remove any additional padding */
+}
+
+.navbar-nav .nav-link {
+    font-size: 16px; /* Adjust font size */
+    padding: 5px 10px; /* Adjust padding for clickable area */
+}
+
+.navbar .btn {
+    padding: 5px 15px; /* Adjust button padding */
+    font-size: 14px; /* Adjust button font size */
+}
+
+/* Logo and Text Styling */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: auto;
+    height: 120px; /* Adjust to a size that looks balanced in the navbar */
+    max-height: 120px; /* Ensures the logo stays at this max size */
+    margin-right: 10px;
+}
+
+
+/* Nav Links */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin: 0;
+}
+
+.nav-links li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.cta {
+    background-color: #fc4f35;
+    padding: 8px 16px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Theme Toggle Button */
+#theme-toggle {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #FFFFFF;
+}
+
+/* General Styling for Logos */
+.logo img {
+    width: auto;
+    height: 230px; /* Adjust this to your preferred logo size */
+    max-height: 230px;
+    margin-right: 10px;
+}
+
+/* Default: Show dark logo and hide light logo */
+.logo-dark {
+    display: inline; /* Visible in dark mode */
+}
+.logo-light {
+    display: none; /* Hidden in dark mode */
+}
+
+/* When Light Mode is active, show the light logo and hide the dark logo */
+body.light-mode .logo-dark {
+    display: none; /* Hide dark logo */
+}
+body.light-mode .logo-light {
+    display: inline; /* Show light logo */
+}
+
+/* Logo Text */
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-transform: none;
+    letter-spacing: 0.1px;
+}
+body.light-mode .logo-text {
+    color: #333333; /* Adjust to a dark color for light mode */
+}
+/* About Section */
+.about-section {
+    position: relative;
+    padding: 100px 20px; /* Add some space around the section */
+    background-color: #1a1a1a; /* Dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+.about-container {
+    background-color: rgba(30, 30, 30, 0.9); /* Semi-transparent dark background */
+    padding: 40px;
+    border-radius: 15px;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+    position: relative;
+    z-index: 1;
+     /* Add a red border */
+    border: 3px solid #fc4f35; /* Red border color */
+}
+
+.about-badge {
+    background-color: #333333; /* Dark badge color */
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.about-container h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+.about-container p {
+    font-size: 18px;
+    color: #b3b3b3; /* Slightly lighter color for contrast */
+    line-height: 1.6;
+}
+
+/* Gradient Background Effect */
+.about-section::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(192, 255, 114, 0.3), transparent 60%); /* Green gradient */
+    top: 20%;
+    left: -10%;
+    z-index: 0;
+    border-radius: 50%;
+    filter: blur(50px);
+
+}
+
+.about-section::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 150, 255, 0.3), transparent 70%); /* Blue gradient for contrast */
+    bottom: 20%;
+    right: -10%;
+    z-index: 0;
+    border-radius: 50%;
+    filter: blur(50px);
+}
+/* Contact Section */
+.contact-section {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #f9f9f9; /* Light background by default */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.contact-section h2 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form elements */
+}
+
+.contact-form label {
+    font-size: 1em;
+    font-weight: bold;
+    text-align: left;
+    color: #333333;
+}
+
+.contact-form input, .contact-form select {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.contact-form input:focus, .contact-form select:focus {
+    border-color: #1670eb; /* Blue border on focus */
+    outline: none;
+}
+
+.submit-button {
+    padding: 12px;
+    background-color: #fc4f35;
+    border: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #1670eb;
+}
+
+/* Dark Mode Styling */
+body.dark-mode .contact-section {
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+}
+
+body.dark-mode .contact-form label {
+    color: #b3b3b3;
+}
+
+body.dark-mode .contact-form input,
+body.dark-mode .contact-form select {
+    background-color: #2a2a2a;
+    border: 1px solid #444444;
+    color: #FFFFFF;
+}
+
+body.dark-mode .contact-form input:focus,
+body.dark-mode .contact-form select:focus {
+    border-color: #fc4f35;
+}
+
+body.dark-mode .submit-button {
+    background-color: #1670eb;
+}
+/* Features Section */
+.features-section {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+}
+
+.features-heading {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.feature-boxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+    align-items: start;
+}
+
+.feature-item {
+    background-color: #8c8989;
+    margin: 4px 0; /* Reduced margin to decrease the gap */
+    color: #FFFFFF;
+    border: 2px solid #272a77;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    border-left: 5px solid #fc4f35; /* Thicker and lighter orange border */
+    max-width: 600px;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.feature-item h3 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.feature-item p {
+    font-size: 1.1em;
+    color: #b3b3b3;
+}
+
+.feature-item:hover {
+    background-color: #333333;
+    transform: scale(1.02);
+}
+
+.feature-item:active {
+    background-color: #444444;
+}
+
+
+#threejs-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Send behind other content */
+    overflow: hidden;
+}
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: var(--dropdown-bg); /* Dynamic background color */
+    color: var(--dropdown-text); /* Dynamic text color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 10px 0;
+    min-width: 150px;
+    opacity: 0; /* Hidden by default */
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Ensure hover works seamlessly between button and menu */
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Menu Items */
+.dropdown-menu li {
+    list-style: none;
+    padding: 8px 20px;
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    color: inherit; /* Inherit color based on theme */
+    font-weight: bold;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #1670eb; /* Highlight color */
+    color: #fff; /* Ensure text is readable */
+}
+
+/* Light Mode Styles */
+body.light-mode .dropdown-menu {
+    --dropdown-bg: #ffffff;
+    --dropdown-text: #333333;
+}
+
+/* Dark Mode Styles */
+body.dark-mode .dropdown-menu {
+    --dropdown-bg: #2a2a2a;
+    --dropdown-text: #ffffff;
+}
+           /* Particle Background */
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Floating Icon Animation */
+.floating-icon {
+  position: absolute;
+  top: 58%;
+  left: 83%;
+  transform: translate(-50%, -50%);
+  animation: float 4s ease-in-out infinite;
+}
+
+.floating-icon img {
+  width: 200px;
+  height: 210px;
+
+}
+
+/* Keyframes for Floating Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-20px);
+  }
+}
+
+
+    /* Team Section Styling */
+.team-section {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.team-heading {
+  font-size: 2.5em;
+  color: var(--heading-color);
+  margin-bottom: 40px;
+  font-weight: bold;
+
+  border-bottom: 4px solid var(--heading-color);
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.team-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.team-member {
+  background: var(--card-background);
+  border-radius: 15px;
+  border: 3px solid var(--heading-color);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 280px;
+  transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-member:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px var(--card-hover-shadow);
+  border: 3px solid var(--text-color);
+}
+
+.team-member::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #fc4f35, #1670eb, #272a77);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s;
+  filter: blur(15px);
+}
+
+.team-member:hover::before {
+  opacity: 1;
+}
+
+.member-photo img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 3px solid var(--heading-color);
+  box-shadow: 0 4px 8px var(--card-hover-shadow);
+}
+
+.member-name {
+  font-size: 1.4em;
+  color: var(--heading-color);
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.member-role {
+  font-size: 1em;
+  margin: 5px 0;
+}
+/* For dark theme */
+body.dark-mode .member-role {
+  color: rgba(255, 255, 255, 0.7); /* Dull white */
+}
+
+/* For light theme */
+body.light-mode .member-role {
+  color: rgba(0, 0, 0, 0.6); /* Light grey */
+}
+
+
+.email-link {
+  display: inline-block;
+  font-size: 0.95em;
+  color: var(--text-color);
+  text-decoration: none;
+  background: var(--heading-color);
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 5px;
+  transition: background 0.3s, transform 0.2s;
+}
+/* For dark theme */
+body.dark-mode .email-link {
+  color: rgba(255, 255, 255, 0.7); /* Dull white */
+}
+
+/* For light theme */
+body.light-mode .email-link{
+  color: rgba(0, 0, 0, 0.6); /* Light grey */
+}
+
+.email-link:hover {
+  background: #fc4f35;
+  transform: scale(1.05);
+}
+
+/* Add a glow effect to the team section boundary */
+.team-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 5px solid transparent;
+  border-radius: 10px;
+  background: linear-gradient(to right, #1670eb, #c0ff72);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: exclude;
+  z-index: -1;
+  animation: glowing-border 2s infinite alternate;
+}
+
+@keyframes glowing-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --background-color: #121212;
+  --text-color: #e0e0e0;
+  --card-background: #1e1e1e;
+  --card-hover-shadow: rgba(255, 255, 255, 0.2);
+  --heading-color: #c0ff72;
+}
+.feature-icon {
+    width: 200px;
+    height: 200px;
+    padding: 0.01px;
+
+}
+
+
+
+/* Why Choose Us Section */
+.why-choose-us-container {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.why-choose-us-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2.5rem;
+  color: var(--text-color);
+}
+
+/* General container for all rows */
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+/* Top row */
+.row-top {
+  gap: 60px; /* Space between circles */
+}
+
+/* Bottom row */
+.row-bottom {
+  gap: 70px; /* Slightly more gap for bottom row */
+}
+
+/* Styling for circles */
+.circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 310px; /* Consistent width for circles */
+  height: 390px; /* Consistent height for circles */
+  border-radius: 50%; /* Perfect circular shape */
+  background-color: var(--background-color); /* Dynamic for dark/light mode */
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  padding: 60px;
+}
+
+.circle .animation {
+  width: 150px; /* Bigger animations */
+  height: 150px;
+}
+/* For dark theme */
+body.dark-mode .circle p {
+  color: rgba(255, 255, 255, 0.7); /* Dull white */
+}
+
+/* For light theme */
+body.light-mode .circle p {
+  color: rgba(0, 0, 0, 0.6); /* Light grey */
+}
+
+
+/* Text styling */
+.circle h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--text-color); /* Dynamic for dark/light mode */
+  margin: 4px 0;
+}
+
+.circle p {
+  font-size: 0.9rem;
+  color: var(--text-color-light); /* Subtle light text */
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .row {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+
+  .circle {
+    width: 180px;
+    height: 180px;
+  }
+
+  .animation {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+
+    </style>
+</head>
+<body class="dark-mode"> <!-- Start in dark mode by default -->
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Dark Mode Logo -->
+            <img src="{{ url_for('static', filename='Media/WhiteLogo.png') }}"  alt="RevDroid Dark Logo" class="logo-dark">
+            <!-- Light Mode Logo -->
+            <img src="{{ url_for('static', filename='Media/BlackLogo.png') }}" alt="RevDroid Light Logo" class="logo-light">
+
+        </div>
+        <ul class="nav-links">
+            <li class="dropdown">
+               <a href="#about" class="dropdown-toggle">About</a>
+                 <ul class="dropdown-menu">
+                    <li><a href="#mission">Our Mission</a></li>
+                    <li><a href="#why-choose-us">Why Choose Us?</a></li>
+                 </ul>
+            </li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#team">Developers</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+                <button id="get-started-btn" class="cta">Get Started</button>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('main.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('main.register') }}">Signup</a></li>
+                </ul>
+            </li>
+        </ul>
+        <button id="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </nav>
+<!-- Particle Background -->
+  <div id="particles-js"></div>
+
+   <!-- Hero Section -->
+<header class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>RevDroid – Your Android Security Companion</h1>
+            <p>RevDroid is a cutting-edge Android application security framework designed to detect, analyze, and mitigate security vulnerabilities in Android applications. Our goal is to foster a secure ecosystem for developers and users alike, making Android applications safer.</p>
+            <button class="cta-button" onclick="scrollToSection()">Explore Features</button>
+        </div>
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='Media/main.png') }}" alt="Main Logo" />
+        </div>
+    </div>
+</header>
+
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="about-container">
+            <div class="about-badge">Our Mission</div>
+            <h2>Enhancing Android Security Through Innovation</h2>
+            <p>Our mission is to strengthen Android application security by providing a comprehensive tool that empowers security professionals, technical and non-technical users to proactively identify and resolve security issues.</p>
+        </div>
+    </section>
+
+  <!-- why choose us ?-->
+<div class="why-choose-us-container">
+  <h2>Why Choose Us?</h2>
+<div class="container">
+  <!-- Top Row -->
+  <div class="row row-top">
+    <div class="circle">
+      <dotlottie-player src="https://lottie.host/83488243-b423-42b1-867c-5706efa1999c/rL6czLOCht.lottie" background="transparent" speed="1" style="width: 170px; height: 170px" loop autoplay></dotlottie-player>
+      <h3>Comprehensive Security</h3>
+      <p>Detect vulnerabilities, threats, and malware with our robust, in-depth analysis tools.</p>
+    </div>
+    <div class="circle">
+      <dotlottie-player src="https://lottie.host/8d24cd5b-4af6-4b61-995a-eaa90d3b2029/UwjqlEESqz.lottie" background="transparent" speed="1" style="width: 130px; height: 130px" loop autoplay></dotlottie-player>
+      <h3>User-Friendly Interface</h3>
+      <p>Intuitive design empowering both technical and non-technical users for seamless use.</p>
+    </div>
+    <div class="circle">
+      <dotlottie-player src="https://lottie.host/9ff8abb9-9bbf-42b1-b3c4-3d4b90022217/4fd6JQPvdM.lottie" background="transparent" speed="1" style="width: 170px; height: 170px" loop autoplay></dotlottie-player>
+      <h3>Detailed Reporting</h3>
+      <p>Generate insightful reports with actionable details to improve your app's security.</p>
+    </div>
+  </div>
+</div>
+  <!-- Bottom Row -->
+  <div class="row row-bottom">
+    <div class="circle">
+       <dotlottie-player src="https://lottie.host/5dcdef3c-29cc-48c4-a233-eb629454e72c/FyIw28Puzu.lottie" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay></dotlottie-player>
+      <h3>Trusted by Professionals</h3>
+      <p>Built with precision and reliability, relied upon by security experts.</p>
+    </div>
+    <div class="circle">
+      <dotlottie-player src="https://lottie.host/9f763d02-92d9-45d8-bc7f-0d5fa46b2a35/vQ6a3Z9qFm.lottie" background="transparent" speed="1" style="width: 120px; height: 120px" loop autoplay></dotlottie-player>
+      <h3>Cost-Effective Solution</h3>
+      <p>Affordable access to advanced security tools for everyone.</p>
+    </div>
+  </div>
+</div>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <h2 class="features-heading">Features</h2>
+        <div class="feature-boxes">
+            <div class="feature-item">
+                <h3>Basic Analysis</h3>
+                <p>Quickly scan for vulnerabilities and potential risks, providing you with essential insights for a rapid security check.</p>
+                <img src="{{ url_for('static', filename='Media/01.png') }}"  alt="Feature Icon" class="feature-icon">
+            </div>
+            <div class="feature-item">
+                <h3>Extended Analysis</h3>
+                <p>Unlock detailed insights with comprehensive bytecode examination, identifying complex patterns and threats often missed by standard tools.</p>
+                <img src="{{ url_for('static', filename='Media/02.png') }}"  alt="Feature Icon" class="feature-icon">
+            </div>
+            <div class="feature-item">
+                <h3>Advanced Static</h3>
+                <p>Dive deep into your APK’s core with a powerful, hands-on analysis, unveiling every hidden layer to ensure uncompromised security.</p>
+                <img src="{{ url_for('static', filename='Media/03.png') }}"  alt="Feature Icon" class="feature-icon">
+            </div>
+            <div class="feature-item">
+                <h3>Dynamic Analysis</h3>
+                <p>Experience real-time behavior analysis that detects threats before they become problems, keeping your applications secure under all conditions.</p>
+                <img src="{{ url_for('static', filename='Media/04.png') }}"  alt="Feature Icon" class="feature-icon">
+            </div>
+        </div>
+    </section>
+
+<!-- Meet Our Team Section -->
+<section id="team" class="team-section">
+  <h2 class="team-heading">Meet Our Team</h2>
+  <div class="team-container">
+    <!-- Team Member 1 -->
+    <div class="team-member">
+      <div class="member-photo">
+        <img src="{{ url_for('static', filename= 'Media/boy.png') }}"
+             alt="Muhammad Ahmad Ali Qureshi" />
+       </div>
+       <h3 class="member-name">Ahmad Ali Qureshi</h3>
+       <p class="member-role">Co-founder</p>
+       <a href="mailto:maaq2016@gmail.com" class="email-link">maaq2016@gmail.com</a>
+    </div>
+
+    <!-- Team Member 2 -->
+    <div class="team-member">
+      <div class="member-photo">
+        <img src="{{ url_for('static', filename='Media/girl.jpeg') }}"
+             alt="Arsham Munawar Gill" />
+       </div>
+    <h3 class="member-name">Arsham Munawar Gill</h3>
+    <p class="member-role">Co-founder</p>
+    <a href="mailto:gillarsham35@gmail.com" class="email-link">gillarsham35@gmail.com</a>
+  </div>
+
+    <!-- Team Member 3 -->
+    <div class="team-member">
+      <div class="member-photo">
+        <img src="{{ url_for('static', filename= 'Media/boy2.png') }}"
+             alt="Muhammad Umer" />
+       </div>
+    <h3 class="member-name">Muhammad Umer</h3>
+    <p class="member-role">Co-founder</p>
+    <a href="mailto:mumer65212@gmail.com" class="email-link">mumer65212@gmail.com</a>
+  </div>
+</div>
+</section>
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <h2>Contact Us</h2>
+        <form class="contact-form">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+
+            <label for="query">Details</label>
+            <input type="query" id="query" name="query" placeholder="Please provide details about your request..." rows="4"  required>
+
+            <label for="user-type">I am a...</label>
+            <select id="user-type" name="user-type" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="student">Student</option>
+                <option value="industry-professional">Industry Professional</option>
+                <option value="other">Other</option>
+            </select>
+
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+       <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 RevDroid. All rights reserved.</p>
+    </footer>
+
+<!-- Floating Android Icon -->
+  <div class="floating-icon">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Android Icon">
+  </div>
+
+    <script src="script.js"></script>
+
+
+
+    <script>
+function toggleTheme() {
+    const body = document.body;
+    const themeToggleButton = document.getElementById("theme-toggle");
+
+    // Toggle light-mode and dark-mode classes
+    body.classList.toggle("light-mode");
+    body.classList.toggle("dark-mode");
+
+    // Update the button icon and log the result
+    if (body.classList.contains("light-mode")) {
+        themeToggleButton.textContent = "🌞"; // Sun icon
+        console.log("Light mode activated - Sun icon should show");
+        localStorage.setItem("theme", "light-mode");
+    } else {
+        themeToggleButton.textContent = "🌙"; // Moon icon
+        console.log("Dark mode activated - Moon icon should show");
+        localStorage.setItem("theme", "dark-mode");
+    }
+}
+
+// Initialize theme on page load
+document.addEventListener("DOMContentLoaded", () => {
+    const body = document.body;
+    const themeToggleButton = document.getElementById("theme-toggle");
+
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem("theme") || "dark-mode";
+    body.classList.add(savedTheme);
+
+    // Set initial icon
+    if (savedTheme === "light-mode") {
+        themeToggleButton.textContent = "🌞";
+    } else {
+        themeToggleButton.textContent = "🌙";
+    }
+
+    console.log("Initial Theme:", savedTheme);
+});
+
+// three.js
+// Initialize the scene, camera, and renderer
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.getElementById("threejs-background").appendChild(renderer.domElement);
+
+// Create a 3D shape (e.g., a rotating sphere)
+const geometry = new THREE.SphereGeometry(5, 32, 32); // Sphere geometry
+const material = new THREE.MeshStandardMaterial({
+    color: 0x0077ff, // Light blue color
+    emissive: 0x001133,
+    metalness: 0.5,
+    roughness: 0.1,
+});
+const sphere = new THREE.Mesh(geometry, material);
+scene.add(sphere);
+
+// Add lighting
+const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
+scene.add(ambientLight);
+const pointLight = new THREE.PointLight(0xffffff, 1);
+pointLight.position.set(10, 10, 10);
+scene.add(pointLight);
+
+// Position the camera
+camera.position.z = 15;
+
+function scrollToSection() {
+  const section = document.getElementById("features");
+  section.scrollIntoView({ behavior: "smooth" });
+}
+
+
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+
+    // Rotate the sphere for animation
+    sphere.rotation.x += 0.005;
+    sphere.rotation.y += 0.005;
+
+    // Render the scene
+    renderer.render(scene, camera);
+}
+animate();
+
+// Handle window resizing
+window.addEventListener("resize", () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+});
+
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('light-mode');
+    body.classList.toggle('dark-mode');
+}
+        document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.querySelector(".dropdown");
+    const dropdownMenu = document.querySelector(".dropdown-menu");
+
+    let timeout;
+
+    // Show dropdown on mouseenter
+    dropdown.addEventListener("mouseenter", () => {
+        clearTimeout(timeout);
+        dropdownMenu.style.display = "block";
+        dropdownMenu.style.opacity = "1";
+        dropdownMenu.style.visibility = "visible";
+    });
+
+    // Hide dropdown on mouseleave (with a small delay)
+    dropdown.addEventListener("mouseleave", () => {
+        timeout = setTimeout(() => {
+            dropdownMenu.style.display = "none";
+            dropdownMenu.style.opacity = "0";
+            dropdownMenu.style.visibility = "hidden";
+        }, 200); // Small delay to allow hover to transition smoothly
+    });
+
+    // Keep menu visible when hovered over the menu itself
+    dropdownMenu.addEventListener("mouseenter", () => {
+        clearTimeout(timeout);
+        dropdownMenu.style.display = "block";
+        dropdownMenu.style.opacity = "1";
+        dropdownMenu.style.visibility = "visible";
+    });
+
+    // Hide menu when leaving the menu
+    dropdownMenu.addEventListener("mouseleave", () => {
+        timeout = setTimeout(() => {
+            dropdownMenu.style.display = "none";
+            dropdownMenu.style.opacity = "0";
+            dropdownMenu.style.visibility = "hidden";
+        }, 200); // Small delay to ensure smooth experience
+    });
+});
+        // Particle.js Configuration
+particlesJS('particles-js', {
+  particles: {
+    number: {
+      value: 80, // Number of particles
+    },
+    size: {
+      value: 3, // Size of particles
+    },
+    move: {
+      speed: 2, // Speed of particle movement
+    },
+    line_linked: {
+      enable: true, // Connect particles with lines
+    },
+    color: {
+      value: "#ffffff", // Particle color
+    },
+  },
+  interactivity: {
+    events: {
+      onhover: {
+        enable: true,
+        mode: "repulse", // Particles move away on hover
+      },
+    },
+  },
+});
+
+        document.querySelector('.cta-button').addEventListener('click', () => {
+  document.getElementById('team').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      target.scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+
+    </script>
+</body>
+</html>

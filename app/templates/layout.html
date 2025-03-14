@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* General Body Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif; /* Modern and clean font */
+            background-color: linear-gradient(135deg, #1a1a1d, #121212); /* Light grey background */
+            color: #333333; /* Dark grey text for contrast */
+
+
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #2c2c2c; /* Dark grey background */
+            padding: 0.2rem 2rem; /* Reduced padding for a sleek design */
+            border-bottom: 2px solid #1670eb; /* Subtle blue border */
+            align-items: center; /* Align items in the center */
+            height: 94px; /* Explicit height to halve the current size */
+            display: flex; /* Flexbox for proper alignment */
+        }
+
+        .navbar-logo {
+            height: 135px; /* Keep the logo size at 150px */
+            width: auto;
+            margin-right: 10px;
+
+        }
+
+        .navbar-nav .nav-link {
+            color: #e0e0e0;
+            font-size: 17px; /* Slightly smaller font for sleek look */
+            font-weight: 500; /* Clean and professional font weight */
+            text-transform: capitalize; /* Capitalized text for links */
+            transition: color 0.3s ease-in-out;
+            padding: 0.2rem 0.5rem; /* Tighter padding for compactness */
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffffff; /* Bright white on hover */
+            text-shadow: 0 0 5px #1670eb, 0 0 10px #1670eb; /* Glow effect with blue color */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center; /* Ensure logo aligns with the navbar */
+            padding: 0; /* Remove extra padding */
+        }
+
+        /* Removed Extra Spacing Below Navbar */
+        .navbar-spacing {
+            display: none;
+        }
+
+        /* Dropdown Styling */
+        .dropdown-menu {
+            background-color: #2c2c2c; /* Matches the navbar */
+            border: 1px solid #1670eb;
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: #e0e0e0;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            color: #ffffff;
+            background-color: #1670eb;
+        }
+
+        /* Adjusting the Container */
+        .container {
+            margin-top: 20px;
+        }
+
+        /* Import Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">
+            <img src="{{ url_for('static', filename='Media/WhiteLogo.png') }}" alt="RevDroid Logo" class="navbar-logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" style="color: #e0e0e0;"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.admin') }}">Admin Panel</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.register') }}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content Section -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  flask_app:
+    build: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    networks:
+      - revdroid_network
+
+  mobsf_custom:
+    image: custom_mobsf:latest
+    container_name: mobsf_custom
+    ports:
+      - "8000:8000"
+    networks:
+      - revdroid_network
+
+networks:
+  revdroid_network:
+    driver: bridge

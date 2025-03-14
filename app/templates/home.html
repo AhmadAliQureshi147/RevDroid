@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center">
+        <!-- Scrolling Ticker for Security Updates -->
+        <div class="ticker bg-dark text-white py-2 rounded mb-4"
+            style="box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+                   background: linear-gradient(90deg, #D3D3D3, #3f3f3f);
+                   border: 1px solid #ffffff;">
+            <marquee behavior="scroll" direction="left" style="font-size: 16px; font-weight: 600;">
+                🚨 Stay Protected: 120 new malware variants detected today | 🛡️ 90% of Android malware targets unprotected apps | 🔐 Keep your apps updated to stay secure!
+            </marquee>
+        </div>
+
+        <!-- Welcome Section -->
+        <h1 class="fw-bold"
+            style="color: #000;
+                   font-size: 3.5rem;
+                   font-family: 'Poppins', sans-serif;">
+            Welcome to RevDroid
+        </h1>
+        <p class="lead" style="color: #3f3f3f; font-size: 1.25rem;">
+            Choose your user category below:
+        </p>
+
+        <!-- User Category Buttons -->
+        <div class="d-flex justify-content-center gap-4 mt-4">
+            <button id="standard-user-btn" class="btn btn-lg"
+                style="background: linear-gradient(90deg, #007bff, #0056d2);
+                       color: white;
+                       border-radius: 12px;
+                       font-weight: bold;
+                       font-family: 'Poppins', sans-serif;
+                       box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+                       padding: 0.8rem 2rem;">
+                Standard User
+            </button>
+            <button id="technical-user-btn" class="btn btn-lg"
+                style="background: linear-gradient(90deg, #fc4f35, #a00000);
+                       color: white;
+                       border-radius: 12px;
+                       font-weight: bold;
+                       font-family: 'Poppins', sans-serif;
+                       box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+                       padding: 0.8rem 2rem;">
+                Technical User
+            </button>
+        </div>
+
+        <!-- Standard User Options -->
+        <div id="standard-user-options" class="mt-5" style="display: none;">
+            <h3 class="fw-bold" style="color: #007bff; font-size: 1.5rem;">Standard User Options</h3>
+            <p class="lead" style="color: #3f3f3f;">For users seeking quick and detailed analysis.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <div class="text-center">
+                    <a href="{{ url_for('malware_detection.index') }}" class="btn btn-lg"
+                        style="background-color: #333;
+                               color: white;
+                               border-radius: 10px;
+                               box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                               padding: 0.6rem 1.5rem;">
+                        Basic Analysis
+                    </a>
+                    <div class="analysis-detail-box mt-2"
+                        style="background: #D3D3D3;
+                               color: #3f3f3f;
+                               font-family: 'Poppins', sans-serif;
+                               padding: 1rem;
+                               border-radius: 8px;
+                               box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <p>Quickly scan for vulnerabilities and potential risks, providing essential insights for rapid security checks.</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="{{ url_for('static_analysis.upload_file') }}" class="btn btn-lg"
+                        style="background-color: #333;
+                               color: white;
+                               border-radius: 10px;
+                               box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                               padding: 0.6rem 1.5rem;">
+                        Extended Analysis
+                    </a>
+                    <div class="analysis-detail-box mt-2"
+                        style="background: #D3D3D3;
+                               color:#3f3f3f;
+                               font-family: 'Poppins', sans-serif;
+                               padding: 1rem;
+                               border-radius: 8px;
+                               box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <p>Unlock detailed insights with comprehensive bytecode examination, identifying threats often missed by standard tools.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical User Options -->
+        <div id="technical-user-options" class="mt-5" style="display: none;">
+            <h3 class="fw-bold" style="color: #fc4f35; font-size: 1.5rem;">Technical User Options</h3>
+            <p class="lead" style="color: #3f3f3f;">For advanced users requiring in-depth technical insights.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <div class="text-center">
+                    <a href="{{ url_for('manual_analysis.manual_analysis_home') }}" class="btn btn-lg"
+                        style="background-color: #333;
+                               color: white;
+                               border-radius: 10px;
+                               box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                               padding: 0.6rem 1.5rem;">
+                        Advanced Static
+                    </a>
+                    <div class="analysis-detail-box mt-2"
+                        style="background: #D3D3D3;
+                               color: #3f3f3f;
+                               font-family: 'Poppins', sans-serif;
+                               padding: 1rem;
+                               border-radius: 4px;
+                               box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <p>Dive deep into your APK’s core with hands-on analysis, unveiling every hidden layer to ensure uncompromised security.</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="{{ url_for('main.dynamic_analysis') }}" class="btn btn-lg"
+                        style="background-color: #333;
+                               color: white;
+                               border-radius: 10px;
+                               box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                               padding: 0.6rem 1.5rem;">
+                        Dynamic Analysis <span style="color: gold;">👑</span>
+                    </a>
+                    <div class="analysis-detail-box mt-2"
+                        style="background: #D3D3D3;
+                               color:#3f3f3f;
+                               font-family: 'Poppins', sans-serif;
+                               padding: 1rem;
+                               border-radius: 8px;
+                               box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <p>Experience real-time behavior analysis that detects threats before they become problems, keeping your apps secure.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("standard-user-btn").onclick = function () {
+        document.getElementById("standard-user-options").style.display = "block";
+        document.getElementById("technical-user-options").style.display = "none";
+    };
+    document.getElementById("technical-user-btn").onclick = function () {
+        document.getElementById("technical-user-options").style.display = "block";
+        document.getElementById("standard-user-options").style.display = "none";
+    };
+</script>
+
+<style>
+    .btn:hover {
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+    .analysis-detail-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+    }
+    .ticker {
+        text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 0px 0px 15px rgba(22, 112, 235, 0.8);
+    }
+</style>
+{% endblock %}

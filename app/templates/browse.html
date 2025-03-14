@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Decompiled APK</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            background-color: #fdfdfd;
+        }
+        .file-item:hover {
+            background-color: #e2e6ea;
+        }
+        .file-item i {
+            margin-right: 15px;
+            color: #007bff;
+            font-size: 1.2em;
+        }
+        .file-name {
+            flex-grow: 1;
+            word-break: break-word;
+        }
+        .file-actions {
+            margin-left: 15px;
+        }
+        .file-actions a {
+            text-decoration: none;
+            color: #17a2b8;
+            margin-left: 10px;
+        }
+        .file-actions a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% extends "layout.html" %}
+    {% block content %}
+
+    <div class="container mt-5">
+        <div class="header">
+            <h2>Decompiled Files of {{ apk_name }}</h2>
+        </div>
+
+        {% if files %}
+            <ul id="file-list" class="file-list">
+                {% for file in files %}
+                    <li class="file-item">
+                        <i class="fas fa-file-alt"></i>
+                        <div class="file-name">
+                            <a href="{{ url_for('manual_analysis.view_file', apk_name=apk_name, file_path=file) }}" class="text-dark">
+                                {{ file }}
+                            </a>
+                        </div>
+                        <div class="file-actions">
+                            <a href="{{ url_for('manual_analysis.download_file', apk_name=apk_name, file_path=file) }}" class="btn btn-outline-info" download>
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-danger">No decompiled files found.</p>
+        {% endif %}
+
+        <a href="{{ url_for('manual_analysis.manual_analysis_home') }}" class="btn btn-secondary mt-3">Back to Upload Page</a>
+    </div>
+
+    {% endblock %}
+</body>
+</html>")}]}
+

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extended Static Analysis Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Poppins', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef5ff;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1e3a8a;
+            color: #fff;
+            padding: 20px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+
+        .header img {
+            height: 150px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+            color: #fff;
+        }
+
+        .content {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h2, h3 {
+            color: #1e3a8a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #dce6f7;
+        }
+
+        .certificate {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .download-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .download-link:hover {
+            background-color: #45a049;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='Media/WhiteLogo.png') }}"  alt="Logo">
+        <h1>Extended Android Application Analysis</h1>
+    </div>
+    <div class="container">
+        <div class="content">
+            <div class="section">
+                <h2>1. General Information</h2>
+                <table>
+                    <tr>
+                        <th>Field</th>
+                        <th>Details</th>
+                    </tr>
+                    <tr>
+                        <td>Package Name</td>
+                        <td>{{ results.metadata_info.package_name or 'Not available' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Version Code</td>
+                        <td>{{ results.metadata_info.version_code or 'Not available' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Version Name</td>
+                        <td>{{ results.metadata_info.version_name or 'Not available' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Minimum SDK Version</td>
+                        <td>{{ results.metadata_info.min_sdk_version or 'Not available' }} ({{ results.metadata_info.min_android_version or 'Unknown' }})</td>
+                    </tr>
+                    <tr>
+                        <td>Target SDK Version</td>
+                        <td>{{ results.metadata_info.target_sdk_version or 'Not available' }} ({{ results.metadata_info.target_android_version or 'Unknown' }})</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>2. Backup and Debugging Settings</h2>
+                <table>
+                    <tr>
+                        <th>Setting</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Allow Backup</td>
+                        <td>{{ results.metadata_info.allow_backup or 'Not available' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Debuggable</td>
+                        <td>{{ results.metadata_info.debuggable or 'Not available' }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>3. Insecure Storage</h2>
+                {% if results.insecure_storage %}
+                    <table>
+                        <tr>
+                            <th>Permission</th>
+                            <th>Description</th>
+                        </tr>
+                        {% for item in results.insecure_storage %}
+                        <tr>
+                            <td>{{ item.permission }}</td>
+                            <td>{{ item.description }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No insecure storage permissions detected.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>4. Permissions Analysis</h2>
+                {% if results.permissions_analysis %}
+                    <table>
+                        <tr>
+                            <th>Permission</th>
+                            <th>Description</th>
+                            <th>Risk Level</th>
+                        </tr>
+                        {% for permission in results.permissions_analysis %}
+                        <tr>
+                            <td>{{ permission.permission }}</td>
+                            <td>{{ permission.description or 'No description available' }}</td>
+                            <td>{{ permission.risk_level or 'Unknown' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No permissions found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>5. Screens (Activities)</h2>
+                {% if results.activities %}
+                    <table>
+                        <tr>
+                            <th>Activity</th>
+                        </tr>
+                        {% for activity in results.activities %}
+                        <tr>
+                            <td>{{ activity }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No activities found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>6. Services</h2>
+                {% if results.services %}
+                    <table>
+                        <tr>
+                            <th>Service</th>
+                        </tr>
+                        {% for service in results.services %}
+                        <tr>
+                            <td>{{ service }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No services found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>7. Receivers</h2>
+                {% if results.receivers %}
+                    <table>
+                        <tr>
+                            <th>Receiver</th>
+                        </tr>
+                        {% for receiver in results.receivers %}
+                        <tr>
+                            <td>{{ receiver }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No receivers found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>8. Providers</h2>
+                {% if results.providers %}
+                    <table>
+                        <tr>
+                            <th>Provider</th>
+                        </tr>
+                        {% for provider in results.providers %}
+                        <tr>
+                            <td>{{ provider }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No providers found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>9. Certificates</h2>
+                {% if results.certificates %}
+                    {% for certificate in results.certificates %}
+                    <div class="certificate">
+                        <h3>Certificate {{ loop.index }}</h3>
+                        <table>
+                            <tr>
+                                <th>Field</th>
+                                <th>Details</th>
+                            </tr>
+                            <tr>
+                                <td>Country</td>
+                                <td>{{ certificate.subject['Country'] or 'Not available' }}</td>
+                            </tr>
+                            <tr>
+                                <td>State</td>
+                                <td>{{ certificate.subject['State'] or 'Not available' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Locality</td>
+                                <td>{{ certificate.subject['Locality'] or 'Not available' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Organization</td>
+                                <td>{{ certificate.subject['Organization'] or 'Not available' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Common Name</td>
+                                <td>{{ certificate.subject['Common Name'] or 'Not available' }}</td>
+                            </tr>
+                        </table>
+                        <p><strong>Serial Number:</strong> {{ certificate.serial_number }}</p>
+                        <p><strong>Version:</strong> {{ certificate.version }}</p>
+                        <p><strong>Signature Algorithm:</strong> {{ certificate.signature_algorithm }}</p>
+                        <p><strong>Valid From:</strong> {{ certificate.valid_from }}</p>
+                        <p><strong>Valid To:</strong> {{ certificate.valid_to }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No certificates found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

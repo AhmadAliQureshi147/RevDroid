@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View File</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/monokai-sublime.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    {% extends "layout.html" %}
+    {% block content %}
+
+    <div class="container mt-5">
+        <h2 class="text-center">Viewing File: {{ file_path }}</h2>
+
+        <div class="card">
+            <div class="card-body">
+                {% if content %}
+                    <pre><code class="hljs">{{ content }}</code></pre>
+                {% else %}
+                    <p>File not found or could not be displayed.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <br>
+        <a href="{{ url_for('manual_analysis.browse_decompiled', apk_name=apk_name) }}" class="btn btn-secondary">Back to File List</a>
+    </div>
+
+    {% endblock %}
+</body>
+</html>
+
