@@ -8,6 +8,7 @@ services:
       - "5000:5000"
     networks:
       - revdroid_network
+    privileged: true
 
   mobsf_custom:
     image: custom_mobsf:latest
@@ -16,6 +17,7 @@ services:
       - "8000:8000"
     networks:
       - revdroid_network
+    privileged: true
 
 networks:
   revdroid_network:

@@ -1235,31 +1235,34 @@ body.light-mode .circle p {
 </section>
 
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
-        <h2>Contact Us</h2>
-        <form class="contact-form">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Your Name" required>
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+  <h2>Contact Us</h2>
+  <form class="contact-form" action="https://formsubmit.co/info@revdroid.com" method="POST">
+    <input type="hidden" name="_captcha" value="false">
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Your Email" required>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" placeholder="Your Name" required>
 
-            <label for="query">Details</label>
-            <input type="query" id="query" name="query" placeholder="Please provide details about your request..." rows="4"  required>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Your Email" required>
 
-            <label for="user-type">I am a...</label>
-            <select id="user-type" name="user-type" required>
-                <option value="" disabled selected>Select an option</option>
-                <option value="student">Student</option>
-                <option value="industry-professional">Industry Professional</option>
-                <option value="other">Other</option>
-            </select>
+    <label for="query">Details</label>
+    <input type="text" id="query" name="query" placeholder="Please provide details about your request..." required>
 
-            <button type="submit" class="submit-button">Submit</button>
-        </form>
-       <script src="{{ url_for('static', filename='script.js') }}"></script>
-    </section>
+    <label for="user-type">I am a...</label>
+    <select id="user-type" name="user-type" required>
+      <option value="" disabled selected>Select an option</option>
+      <option value="student">Student</option>
+      <option value="industry-professional">Industry Professional</option>
+      <option value="other">Other</option>
+    </select>
+
+    <button type="submit" class="submit-button">Submit</button>
+  </form>
+</section>
+
+
 
     <!-- Footer -->
     <footer>
