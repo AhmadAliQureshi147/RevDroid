@@ -16,16 +16,16 @@
 
         /* Navbar Styling */
         .navbar {
-            background-color: #2c2c2c; /* Dark grey background */
-            padding: 0.2rem 2rem; /* Reduced padding for a sleek design */
-            border-bottom: 2px solid #1670eb; /* Subtle blue border */
-            align-items: center; /* Align items in the center */
-            height: 94px; /* Match layout.html height */
-            display: flex; /* Flexbox for proper alignment */
+            background-color: #2c2c2c;
+            padding: 0.2rem 2rem;
+            border-bottom: 2px solid #1670eb;
+            align-items: center;
+            height: 94px;
+            display: flex;
         }
 
         .navbar-logo {
-            height: 135px; /* Keep the logo size */
+            height: 135px;
             width: auto;
             margin-right: 10px;
         }
@@ -88,21 +88,36 @@
             background-color: #0056b3;
         }
 
-        /* Dropdown Styling (optional if dropdowns are added later) */
-        .dropdown-menu {
-            background-color: #2c2c2c; /* Matches the navbar */
-            border: 1px solid #1670eb;
+        #statusMessage {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #007bff;
         }
 
-        .dropdown-menu .dropdown-item {
-            color: #e0e0e0;
-            transition: color 0.3s, background-color 0.3s;
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 9999;
         }
 
-        .dropdown-menu .dropdown-item:hover {
-            color: #ffffff;
-            background-color: #1670eb;
+        #toast button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
         }
+
     </style>
 </head>
 <body>
@@ -144,12 +159,58 @@
     <div class="container">
         <h1>Extended Android Application Analysis</h1>
         <div class="form-container">
-            <form method="post" action="{{ url_for('static_analysis.upload_file') }}" enctype="multipart/form-data">
+            <form id="uploadForm" method="post" action="{{ url_for('static_analysis.upload_file') }}" enctype="multipart/form-data">
                 <label for="file"><strong>Upload APK for Extended analysis:</strong></label>
-                <input type="file" id="file" name="file" accept=".apk">
+                <input type="file" id="file" name="file" accept=".apk" required>
                 <input type="submit" value="Upload and Decompile">
             </form>
+            <p id="statusMessage"></p>
         </div>
     </div>
+
+    <!-- Toast -->
+    <div id="toast">
+        <span id="toast-message"></span>
+        <button onclick="document.getElementById('toast').style.display='none';">✖</button>
+    </div>
+
+    <!-- Script -->
+    <script>
+        function showToast(message) {
+            document.getElementById("toast-message").textContent = message;
+            document.getElementById("toast").style.display = "block";
+        }
+
+        document.getElementById("uploadForm").addEventListener("submit", function () {
+            console.log("📤 Upload form submitted");
+
+            const loadingMsg = "🔍 Analysis started... Please wait while we analyze your APK.";
+            const statusMessage = document.getElementById("statusMessage");
+            statusMessage.innerText = loadingMsg;
+            statusMessage.style.color = "#007bff";
+
+            if (!("Notification" in window)) {
+                showToast("✅ APK analysis started!");
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                new Notification("APK analysis started.");
+                showToast("✅ APK analysis started!");
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        new Notification("APK analysis started.");
+                    }
+                    showToast("✅ APK analysis started!");
+                }).catch(function (err) {
+                    console.error("❌ Notification permission error:", err);
+                    showToast("✅ APK analysis started!");
+                });
+            } else {
+                showToast("✅ APK analysis started!");
+            }
+        });
+    </script>
 </body>
 </html>

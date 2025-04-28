@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request
 from app import db, bcrypt
 from app.models import User
+from werkzeug.security import generate_password_hash
 from flask_login import login_user, current_user, logout_user, login_required
 from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, AdminAddUserForm, ChangePasswordForm
+import logging
 
 main = Blueprint('main', __name__)
 
@@ -23,29 +25,30 @@ def register():
         return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        existing_user = User.query.filter_by(username=form.username.data).first()
-        if existing_user:
-            flash('Username already exists. Please choose a different one.', 'danger')
-            return redirect(url_for('main.register'))
-
-        existing_email = User.query.filter_by(email=form.email.data).first()
-        if existing_email:
-            flash('Email already exists. Please choose a different one.', 'danger')
-            return redirect(url_for('main.register'))
-
+        # Log the attempt to register
+        print("Form data:", form.data)
+        logging.debug("Attempting to register a new user")
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(first_name=form.first_name.data, last_name=form.last_name.data, username=form.username.data,
-                    email=form.email.data, password=hashed_password, gender=form.gender.data)
-
-        # Set the first registered user as admin
-        if User.query.count() == 0:
-            user.is_admin = True
-
+        user = User(first_name=form.first_name.data, last_name=form.last_name.data,
+                    username=form.username.data, email=form.email.data,
+                    password=hashed_password, gender=form.gender.data)
         db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('main.login'))
+        try:
+            db.session.commit()
+            logging.debug(f"User {user.username} registered successfully")
+            flash('Your account has been created! You are now able to log in', 'success')
+            return redirect(url_for('main.login'))
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f"Failed to register user: {e}")
+            flash('Registration failed. Please try again.', 'danger')
+    else:
+        logging.debug("Form validation failed")
+        for fieldName, errorMessages in form.errors.items():
+            for err in errorMessages:
+                flash(f"Error in {fieldName}: {err}", 'danger')
     return render_template('register.html', title='Register', form=form)
+
 
 @main.route("/login", methods=['GET', 'POST'])
 def login():
@@ -117,12 +120,15 @@ def delete_user(user_id):
 @login_required
 def reset_password(user_id):
     if not current_user.is_admin:
-        flash('You do not have permission to access this page', 'danger')
+        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('main.home'))
+
     user = User.query.get_or_404(user_id)
-    user.password = bcrypt.generate_password_hash('defaultpassword').decode('utf-8')
+    # Assume 'new_secure_password123' is either generated or provided through a secure method
+    new_password = 'new_secure_password123'
+    user.password = generate_password_hash(new_password)
     db.session.commit()
-    flash('User password has been reset to defaultpassword.', 'success')
+    flash('User password has been reset successfully.', 'success')
     return redirect(url_for('main.admin'))
 
 @main.route("/profile", methods=['GET', 'POST'])

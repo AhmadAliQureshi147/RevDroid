@@ -4,6 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Android Application Analysis</title>
+    <style>
+        #statusMessage {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 9999;
+        }
+
+        #toast button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     {% extends "layout.html" %}
@@ -14,7 +46,7 @@
         <!-- Centered Upload Box -->
         <div class="d-flex justify-content-center mt-4">
             <div class="card p-4" style="width: 400px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
-                <form method="POST" enctype="multipart/form-data" action="{{ url_for('manual_analysis.manual_analysis_home') }}">
+                <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{{ url_for('manual_analysis.manual_analysis_home') }}">
                     <div class="form-group">
                         <label for="file" class="form-label"><strong>Upload APK for Advanced Analysis:</strong></label>
                         <input class="form-control mb-3" type="file" name="file" id="file" accept=".apk" required>
@@ -23,6 +55,7 @@
                         <button type="submit" class="btn btn-primary">Upload and Decompile</button>
                     </div>
                 </form>
+                <p id="statusMessage"></p>
             </div>
         </div>
 
@@ -39,39 +72,79 @@
             {% endif %}
         {% endwith %}
 
-    <script>
-        async function fetchFileStructure(apkName) {
-            const response = await fetch(`/structure/${apkName}`);
-            const structure = await response.json();
+        <!-- Toast -->
+        <div id="toast">
+            <span id="toast-message"></span>
+            <button onclick="document.getElementById('toast').style.display='none';">✖</button>
+        </div>
 
-            const fileTree = document.getElementById('file-structure');
-            fileTree.innerHTML = '';
-
-            for (const folder in structure) {
-                const li = document.createElement('li');
-                li.textContent = folder;
-
-                const ul = document.createElement('ul');
-                structure[folder].files.forEach(file => {
-                    const fileLi = document.createElement('li');
-                    fileLi.textContent = file;
-                    fileLi.style.cursor = 'pointer';
-                    fileLi.onclick = () => fetchFileContent(apkName, `${folder}/${file}`);
-                    ul.appendChild(fileLi);
-                });
-
-                li.appendChild(ul);
-                fileTree.appendChild(li);
+        <script>
+            function showToast(message) {
+                document.getElementById("toast-message").textContent = message;
+                document.getElementById("toast").style.display = "flex";
             }
-        }
 
-        async function fetchFileContent(apkName, filePath) {
-            const response = await fetch(`/code/${apkName}/${filePath}`);
-            const content = await response.text();
-            document.getElementById('file-content').textContent = content;
-        }
-    </script>
+            document.getElementById("uploadForm").addEventListener("submit", function () {
+                const loadingMsg = "🔍 Analysis started... Please wait while we analyze your APK.";
+                const statusMessage = document.getElementById("statusMessage");
+                statusMessage.innerText = loadingMsg;
+                statusMessage.style.color = "#007bff";
+
+                if (!("Notification" in window)) {
+                    showToast("✅ APK analysis started!");
+                    return;
+                }
+
+                if (Notification.permission === "granted") {
+                    new Notification("APK analysis started.");
+                    showToast("✅ APK analysis started!");
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(function (permission) {
+                        if (permission === "granted") {
+                            new Notification("APK analysis started.");
+                        }
+                        showToast("✅ APK analysis started!");
+                    }).catch(function (err) {
+                        console.error("❌ Notification permission error:", err);
+                        showToast("✅ APK analysis started!");
+                    });
+                } else {
+                    showToast("✅ APK analysis started!");
+                }
+            });
+
+            async function fetchFileStructure(apkName) {
+                const response = await fetch(`/structure/${apkName}`);
+                const structure = await response.json();
+
+                const fileTree = document.getElementById('file-structure');
+                fileTree.innerHTML = '';
+
+                for (const folder in structure) {
+                    const li = document.createElement('li');
+                    li.textContent = folder;
+
+                    const ul = document.createElement('ul');
+                    structure[folder].files.forEach(file => {
+                        const fileLi = document.createElement('li');
+                        fileLi.textContent = file;
+                        fileLi.style.cursor = 'pointer';
+                        fileLi.onclick = () => fetchFileContent(apkName, `${folder}/${file}`);
+                        ul.appendChild(fileLi);
+                    });
+
+                    li.appendChild(ul);
+                    fileTree.appendChild(li);
+                }
+            }
+
+            async function fetchFileContent(apkName, filePath) {
+                const response = await fetch(`/code/${apkName}/${filePath}`);
+                const content = await response.text();
+                document.getElementById('file-content').textContent = content;
+            }
+        </script>
+    </div>
     {% endblock %}
 </body>
 </html>
-

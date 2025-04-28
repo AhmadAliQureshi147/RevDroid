@@ -7,18 +7,8 @@ services:
     ports:
       - "5000:5000"
     networks:
-      - revdroid_network
-    privileged: true
-
-  mobsf_custom:
-    image: custom_mobsf:latest
-    container_name: mobsf_custom
-    ports:
-      - "8000:8000"
-    networks:
-      - revdroid_network
-    privileged: true
+      - default
 
 networks:
-  revdroid_network:
+  default:
     driver: bridge

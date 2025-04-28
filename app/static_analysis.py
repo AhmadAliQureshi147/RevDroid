@@ -2607,7 +2607,8 @@ def get_android_version(sdk_version):
         31: "Android 12",
         32: "Android 12L",
         33: "Android 13",
-        34: "Android 14"
+        34: "Android 14",
+        35: "Android 15 Vanilla Ice Cream"
     }
     return android_versions.get(sdk_version, "Unknown Android Version")
 

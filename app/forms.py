@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Selec
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_login import current_user
 from app.models import User
+import logging
 
 class RegistrationForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=20)])
@@ -17,6 +18,7 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
+            logging.debug(f"Username {username.data} is already taken.")
             raise ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
