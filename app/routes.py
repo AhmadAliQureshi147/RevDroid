@@ -5,6 +5,9 @@ from werkzeug.security import generate_password_hash
 from flask_login import login_user, current_user, logout_user, login_required
 from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, AdminAddUserForm, ChangePasswordForm
 import logging
+import requests
+from flask import Response, request as flask_request
+
 
 main = Blueprint('main', __name__)
 
@@ -73,10 +76,10 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.landing'))
 
-
 @main.route("/dynamic_analysis")
+@login_required
 def dynamic_analysis():
-    mobsf_url = "http://localhost:8000/"
+    mobsf_url = "http://dynamic.revdroid.com/"
     return redirect(mobsf_url)
 
 

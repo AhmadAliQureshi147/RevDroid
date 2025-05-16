@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, jsonify, send_from_directory, abort
+from flask_login import login_required
 import os
 import subprocess
 
@@ -74,6 +75,7 @@ def manual_analysis_home():
 
 
 @manual_analysis.route('/browse/<apk_name>', methods=['GET'])
+@login_required
 def browse_decompiled(apk_name):
     """List all files in the decompiled APK directory."""
     decompiled_path = os.path.join(OUTPUT_FOLDER, apk_name)
@@ -92,6 +94,7 @@ def browse_decompiled(apk_name):
 
 
 @manual_analysis.route('/view/<apk_name>/<path:file_path>', methods=['GET'])
+@login_required
 def view_file(apk_name, file_path):
     """View the content of a specific decompiled file."""
     decompiled_path = os.path.join(OUTPUT_FOLDER, apk_name, file_path)
@@ -113,6 +116,7 @@ def view_file(apk_name, file_path):
 
 
 @manual_analysis.route('/download/<apk_name>/<path:file_path>', methods=['GET'])
+@login_required
 def download_file(apk_name, file_path):
     """Download a specific decompiled file."""
     decompiled_path = os.path.join(OUTPUT_FOLDER, apk_name, file_path)

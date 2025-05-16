@@ -1266,7 +1266,7 @@ body.light-mode .circle p {
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 RevDroid. All rights reserved.</p>
+        <p>&copy; 2025 RevDroid. All rights reserved.</p>
     </footer>
 
 <!-- Floating Android Icon -->
@@ -1380,45 +1380,44 @@ function toggleTheme() {
     body.classList.toggle('dark-mode');
 }
         document.addEventListener("DOMContentLoaded", function () {
-    const dropdown = document.querySelector(".dropdown");
-    const dropdownMenu = document.querySelector(".dropdown-menu");
+    const dropdowns = document.querySelectorAll(".dropdown");
 
-    let timeout;
+    dropdowns.forEach(dropdown => {
+        const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+        let timeout;
 
-    // Show dropdown on mouseenter
-    dropdown.addEventListener("mouseenter", () => {
-        clearTimeout(timeout);
-        dropdownMenu.style.display = "block";
-        dropdownMenu.style.opacity = "1";
-        dropdownMenu.style.visibility = "visible";
-    });
+        dropdown.addEventListener("mouseenter", () => {
+            clearTimeout(timeout);
+            dropdownMenu.style.display = "block";
+            dropdownMenu.style.opacity = "1";
+            dropdownMenu.style.visibility = "visible";
+        });
 
-    // Hide dropdown on mouseleave (with a small delay)
-    dropdown.addEventListener("mouseleave", () => {
-        timeout = setTimeout(() => {
-            dropdownMenu.style.display = "none";
-            dropdownMenu.style.opacity = "0";
-            dropdownMenu.style.visibility = "hidden";
-        }, 200); // Small delay to allow hover to transition smoothly
-    });
+        dropdown.addEventListener("mouseleave", () => {
+            timeout = setTimeout(() => {
+                dropdownMenu.style.display = "none";
+                dropdownMenu.style.opacity = "0";
+                dropdownMenu.style.visibility = "hidden";
+            }, 200);
+        });
 
-    // Keep menu visible when hovered over the menu itself
-    dropdownMenu.addEventListener("mouseenter", () => {
-        clearTimeout(timeout);
-        dropdownMenu.style.display = "block";
-        dropdownMenu.style.opacity = "1";
-        dropdownMenu.style.visibility = "visible";
-    });
+        dropdownMenu.addEventListener("mouseenter", () => {
+            clearTimeout(timeout);
+            dropdownMenu.style.display = "block";
+            dropdownMenu.style.opacity = "1";
+            dropdownMenu.style.visibility = "visible";
+        });
 
-    // Hide menu when leaving the menu
-    dropdownMenu.addEventListener("mouseleave", () => {
-        timeout = setTimeout(() => {
-            dropdownMenu.style.display = "none";
-            dropdownMenu.style.opacity = "0";
-            dropdownMenu.style.visibility = "hidden";
-        }, 200); // Small delay to ensure smooth experience
+        dropdownMenu.addEventListener("mouseleave", () => {
+            timeout = setTimeout(() => {
+                dropdownMenu.style.display = "none";
+                dropdownMenu.style.opacity = "0";
+                dropdownMenu.style.visibility = "hidden";
+            }, 200);
+        });
     });
 });
+
         // Particle.js Configuration
 particlesJS('particles-js', {
   particles: {

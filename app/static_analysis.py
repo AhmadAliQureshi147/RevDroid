@@ -8,6 +8,7 @@ from androguard.misc import AnalyzeAPK
 from reportlab.lib.pagesizes import letter
 from OpenSSL import crypto
 from reportlab.lib.styles import getSampleStyleSheet
+from flask_login import login_required
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 
 static_analysis = Blueprint('static_analysis', __name__)
@@ -2752,6 +2753,7 @@ def generate_pdf_report(results, output_path):
 
 
 @static_analysis.route('/static_analysis/upload', methods=['GET', 'POST'])
+@login_required
 def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -2779,6 +2781,7 @@ def upload_file():
 
 
 @static_analysis.route('/static_analysis/download_report/<filename>', methods=['GET'])
+@login_required
 def download_report(filename):
     file_path = os.path.join(app.config['OUTPUT_FOLDER'], f"{filename}.pdf")
     try:
